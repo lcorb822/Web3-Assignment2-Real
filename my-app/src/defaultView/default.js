@@ -8,6 +8,7 @@ class DefaultView extends React.Component {
         this.state = { movieList: [],
                        favorites:[],
                         filters:{on:false,title:"",minYear:0,maxYear:3000,rating:0} };
+        this.titleFilter()
        }
 
 
@@ -23,17 +24,33 @@ class DefaultView extends React.Component {
         console.error(error);
         }
        }
-
+       titleFilter = () => {
+        try{
+        const { on,title } = this.props.location.state.filters;
+        
+        
+           if(on){
+            this.state.filters.on = on;
+               this.state.filters.title = title;
+               this.setState( {filters:this.state.filters});
+           }
+        }
+           catch (error) {
+            console.error(error);
+            }
+       }
        filterOn = () =>{
            this.state.filters.on = true;
-           this.setState({filters:this.state.filters})
+           this.setState({filters:this.state.filters});
        }
        addToFavorites = movie =>{
         this.state.favorites.push(movie);
-        this.setState({favorites: this.state.favorites})
+        this.setState({favorites: this.state.favorites});
     }
+    
 
        render(){
+           
            return(
                <div className="container">
                 <Header />

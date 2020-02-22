@@ -9,7 +9,7 @@ function App() {
    <Route path='/' exact component={Home} />
    <Route path='/home' exact component={Home} />
   
-  <Route path='/defaultView' exact component={DefaultView} />
+   <Route path='/defaultView' exact component={DefaultView} />
   </main>
   );
 }

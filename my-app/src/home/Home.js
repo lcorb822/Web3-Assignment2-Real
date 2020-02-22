@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 class Home extends React.Component {
     render() {
         let imgUrl = "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+        const titleValue = "test"
         return (
             <div className='banner'
                 style={{
@@ -20,7 +21,13 @@ class Home extends React.Component {
                     <label for="title">Title</label>
                      <input type="text" id="movTitle" name="title"/>
                     </form>
-                   <Link to='/defaultView'> <button>Show Matching Movies</button>  <button>Show All Movies</button> </Link>
+                   
+                   <Link to={{ pathname: '/defaultView',
+                                 state: {
+                                 filters: {on:true,
+                                          title:titleValue}
+                                     }
+                                }}><button>Show Matching Movies</button> </Link><Link to='/defaultView'> <button>Show All Movies</button> </Link>
                 </div>
             </div>
         );
