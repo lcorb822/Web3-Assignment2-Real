@@ -23,6 +23,7 @@ class DefaultView extends React.Component {
         const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?id=ALL";
         const response = await fetch(url);
         const jsonData = await response.json();
+        jsonData.sort((a, b) => a.title.localeCompare(b.title));
         this.setState( {movieList: jsonData, isLoading : false } );
         }
         catch (error) {
@@ -135,12 +136,7 @@ class DefaultView extends React.Component {
     class MoviesList extends React.Component {
         constructor(props){
             super(props);
-            this.state = { currentFilter:{}};
-        }
-
-        componentDidMount() {
-            this.setState({currentFilter:this.props.filter});   
-
+            this.state = { currentFilter:this.props.filter};
         }
 
         filterList = () =>{
@@ -200,6 +196,48 @@ class DefaultView extends React.Component {
                 {this.props.favoritesList.map((favorite,index) => {
                     return <this.Favorite movie={favorite} key={favorite.id}/>
                     })}
+                </div>
+            )
+        }
+    }
+    class LargeMovie extends React.Component {
+        constructor(props){
+            super(props);
+            this.state = {movieData:{},isLoading: true};
+        }
+
+        async componentDidMount(){
+            try {
+                const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies.php?id="+this.props.movie.id;
+                const response = await fetch(url);
+                const jsonData = await response.json();
+                this.setState( {movieData: jsonData, isLoading : false } );
+                }
+                catch (error) {
+                console.error(error);
+                }
+
+        }
+
+        render(){
+            return(
+                <div>
+                    <div>
+                        <h1>{this.state.movieData.title}</h1>
+                        <img src={"http://image.tmdb.org/t/p/w185"+this.state.movieData.poster} alt={this.state.movieData.tagline} />
+                    </div>
+                    <div>
+                        <button>Add To Favorites</button>
+                        <p>Relase Date:{this.state.movieData.release_date}</p>
+                        <p>Revenue:{this.state.movieData.revenue}</p>
+                        <p>Runtime:{this.state.movieData.runtime}</p>
+                        <p>Tagline:{this.state.movieData.tagline}</p>
+                        <p>IMDB Link:{"https://www.imdb.com/title/"+this.state.movieData.imdb_id}</p>
+                        <p>TMDB Link:{"https://www.themoviedb.org/movie/"+this.state.movieData.tmdb_id}</p>
+                        <p>Overview:{this.state.movieData.details.overview}</p>
+                        <p>Average Rating:{this.state.movieData.ratings.average}</p>
+                    </div>
+
                 </div>
             )
         }
