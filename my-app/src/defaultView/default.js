@@ -95,31 +95,33 @@ class DefaultView extends React.Component {
           below:10,
           above:0,
            on : false};
+          this.setState({title:filterObj.title,before:filterObj.before,after:filterObj.after,below:filterObj.below,above:filterObj.above,on:filterObj.on});
           this.props.returnFilter(filterObj);
         }
         render(){
             return(
                 <div>
                     <form>
-                    <label for="title">Title</label> <br/>
-                    <input type="text" onChange={this.handleChange} defaultValue=""  name="title"/> <br/>
+                    <label id="titleHeader" htmlFor="title">Title</label> <br/>
+                    <input type="text" onChange={this.handleChange} defaultValue={this.state.title}  name="title"/> <br/>
 
-                    <label for="year">Year</label> <br/>
+                    <label id="titleHeader" htmlFor="year">Year</label> <br/>
                     <input type="radio" id="before" name="year" value="before"/>
-                    <label for="male">Before</label> <input type="number" onChange={this.handleChange}  name="before"/><br/>
+                    <label htmlFor="male">Before</label> <input type="number" onChange={this.handleChange}  name="before"/><br/>
                     <input type="radio" id="after" name="year" value="after"/>
-                    <label for="female">After</label> <input type="number" onChange={this.handleChange}   name="after"/><br/>
+                    <label htmlFor="female">After</label> <input type="number" onChange={this.handleChange}   name="after"/><br/>
                     <input type="radio" id="between" name="year" value="between"/>
-                    <label for="other">Between</label> <input type="number" onChange={this.handleChange}   name="after"/>
+                    <label htmlFor="other">Between</label> <input type="number" onChange={this.handleChange}   name="after"/>
                                                        <input type="number" onChange={this.handleChange}   name="before"/> <br/>
-                    <label for="rating">Rating</label> <br/>
-                    <label for="rating">Below:(0-10)</label>
-                    <input type="range"  name="below" min="0" max="10"/>
-                    <label for="rating">Above:(0-10)</label>
-                    <input type="range"  name="above" min="0" max="10"/>
-                    <label for="rating">Between:(0-10)</label>
-                    <input type="range"  name="above" min="0" max="10"/>
-                    <input type="range"  name="belows" min="0" max="10"/> <br/>
+                    <label id="titleHeader" htmlFor="rating">Rating</label> <br/>
+                    <label htmlFor="rating">Below:(0-10)</label>
+                    <input type="number" onChange={this.handleChange}   name="below"/> <br/>
+                    <label htmlFor="rating">Above:(0-10)</label>
+                    <input type="number" onChange={this.handleChange}   name="above"/><br/>
+                    <label htmlFor="rating">Between:(0-10)</label>
+                    <input type="number" onChange={this.handleChange}   name="above"/>
+                    <input type="number" onChange={this.handleChange}   name="below"/> <br/>
+                    
                     </form>
                     <button onClick={this.submitChange}>Filter</button>
                     <button onClick={this.clearHandler}>Clear</button>
@@ -137,36 +139,19 @@ class DefaultView extends React.Component {
         }
 
         componentDidMount() {
-            console.log("ComponentDidMount called");
-
-                    this.setState({currentFilter:this.props.filter});   
+            this.setState({currentFilter:this.props.filter});   
 
         }
-/*
-        componentDidUpdate  (prevProps,prevState) {
-            console.log("componentDidUpdate called");
-            console.log(this.props.filter ,prevProps.filter)
-            if (this.state.currentFilter !==this.props.filter ) {
-            try{
-            console.log(this.props.filter.on);
-            if (this.props.filter.on){
-                const newList = this.props.movieList.filter(movie => (movie.title.includes(this.props.filter.title)))
-                this.setState({filterList:newList,currentFilter:this.props.filter});
-                //this.state.filterList = newList;
-            }
-            else{
-                this.setState({filterList:this.props.movieList});
-               // this.state.filterList= this.props.movieList;
-            }
-        }
-            catch(error) {
-            console.log(error)
-            }
-        }
-        }
-        */
+
         filterList = () =>{
-            const newList = this.props.movieList.filter(movie => (movie.title.includes(this.props.filter.title)));
+            const newList = this.props.movieList.filter(movie =>{ 
+            return    (movie.title.includes(this.props.filter.title) && 
+            movie.release_date.substring(0,4) > this.props.filter.after &&
+            movie.release_date.substring(0,4) < this.props.filter.before &&
+            movie.ratings.average > this.props.filter.above &&
+            movie.ratings.average < this.props.filter.below)
+            
+            })
             return newList
         }
 

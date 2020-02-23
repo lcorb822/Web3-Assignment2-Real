@@ -12,7 +12,6 @@ class Home extends React.Component {
     }
     render() {
         let imgUrl = "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
-        const titleValue = "The"
         return (
             <div className='banner'
                 style={{
