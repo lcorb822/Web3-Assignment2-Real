@@ -5,10 +5,10 @@ class Header extends React.Component {
 
     render(){
         return(
-            <div>
+            <div className="item-header">
         
-        <Link to='/home'> <i className="fas fa-theater-masks"></i> </Link>
-            <button>About</button>
+        <Link to='/home'> <i  className="fas fa-theater-masks" id="homeButton"></i> </Link>
+            <button className="aboutButton">About</button>
             </div>
         )
     }

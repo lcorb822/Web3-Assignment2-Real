@@ -48,10 +48,18 @@ class DefaultView extends React.Component {
     addToFavorites = movie => {
         const tempFavList = this.state.favorites;
         tempFavList.push(movie);
-        this.setState({ favorites: tempFavList });
+        let set = new Set(tempFavList);
+        let noDuplicates = Array.from(set)
+        this.setState({ favorites: noDuplicates });
+    }
+    removeFavorite = movie =>{
+        let favs = this.state.favorites;
+        favs = favs.filter(item => item.id !== movie.id);
+        this.setState({favorites:favs});
     }
     movieView = movie => {
-        this.setState({selectedMovie:movie,viewMode:"movieDetails"})
+        this.setState({selectedMovie:movie});
+        this.setState({viewMode:"movieDetails"});
     }
     defaultView = () => {
         this.setState({selectedMovie:{},viewMode:"default"})
@@ -63,17 +71,17 @@ class DefaultView extends React.Component {
         )
     }
     Default = () => {
-        return (<div className="container">
+        return (<div className="mainContainer">
             <Header />
-            <FavoritesList favoritesList={this.state.favorites} />
-            <MovieFilter returnFilter={this.handleFilterChange} />
-            <MoviesList movieList={this.state.movieList} addFav={this.addToFavorites} filter={this.state.filters} movieView={this.movieView} />
+            <FavoritesList favoritesList={this.state.favorites} movieView={this.movieView} removeFav={this.removeFavorite}  />
+            <MovieFilter returnFilter={this.handleFilterChange} className="item-filter" />
+            <MoviesList movieList={this.state.movieList} addFav={this.addToFavorites} filter={this.state.filters} movieView={this.movieView} className="item-list"/>
         </div>)
     }
     MovieDetails = () => {
         return (<div className="container">
             <Header />
-            <FavoritesList favoritesList={this.state.favorites} />
+            <FavoritesList favoritesList={this.state.favorites} movieView={this.movieView} removeFav={this.removeFavorite}/>
             <LargeMovie movie={this.state.selectedMovie} addFav={this.addToFavorites} returnView={this.defaultView} />
         </div>
 
@@ -129,7 +137,8 @@ class MovieFilter extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="item-filter">
+                <h1>Movie Filter</h1>
                 <form>
                     <label id="titleHeader" htmlFor="title">Title</label> <br />
                     <input type="text" onChange={this.handleChange} defaultValue={this.state.title} name="title" /> <br />
@@ -179,10 +188,11 @@ class MoviesList extends React.Component {
         return newList
     }
 
+
     render() {
         return (
 
-            <div>
+            <div className="item-list">
                 <h1>Movie List</h1>
                 <table className="movieTable">
                     <tbody>
@@ -212,17 +222,18 @@ class FavoritesList extends React.Component {
     }
     Favorite = (props) => {
         return (
-
-            <img className="favPoster" src={"http://image.tmdb.org/t/p/w92" + props.movie.poster} alt={props.movie.title} />
-
+            <div className="favPoster">
+                <button className="removeButton" onClick={()=>props.remFav(props.movie)}><i className="fa fa-window-close" ></i></button>
+            <img  onClick={()=>this.props.movieView(props.movie)} src={"http://image.tmdb.org/t/p/w92" + props.movie.poster} alt={props.movie.title} />
+            </div>
         )
     }
 
     render() {
         return (
-            <div className="favorites">
+            <div className="item-favorite">
                 {this.props.favoritesList.map((favorite, index) => {
-                    return <this.Favorite movie={favorite} key={favorite.id} />
+                    return <this.Favorite movie={favorite} key={favorite.id} movieView={this.props.movieView} remFav={this.props.removeFav}/>
                 })}
             </div>
         )
@@ -239,7 +250,6 @@ class LargeMovie extends React.Component {
             const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies.php?id=" + this.props.movie.id;
             const response = await fetch(url);
             const jsonData = await response.json();
-            console.dir(jsonData);
             this.setState({ movieData: jsonData, viewMode:"movie" });
         }
         catch (error) {
@@ -247,6 +257,22 @@ class LargeMovie extends React.Component {
         }
 
     }
+    async componentDidUpdate(prevProps) {
+        if(this.props.movie.id !== prevProps.movie.id){
+        try {
+            const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies.php?id=" + this.props.movie.id;
+            const response = await fetch(url);
+            const jsonData = await response.json();
+            console.dir(jsonData);
+            this.setState({ movieData: jsonData, viewMode:"movie" });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    }
+
     Cast = (castObj) =>{
         return(
             <table>
@@ -327,12 +353,11 @@ castOrCrew = () =>{
 }
 MovieView = () =>{
     return(<div>
-        <div className="leftSide">
+        <div className="item-movie-left">
             <div>
-            <h1>{this.state.movieData.title}</h1> <button onClick={() => this.props.returnView()}><i class="fa fa-window-close" ></i></button>                    
+            <h1>{this.state.movieData.title}</h1> <button onClick={() => this.props.returnView()}><i className="fa fa-window-close" ></i></button>                    
             <img src={"http://image.tmdb.org/t/p/w185" + this.state.movieData.poster} alt={this.state.movieData.tagline} />
-        </div>
-        <div>
+        
             <button onClick={() => this.props.addFav(this.props.movie)}>Add To Favorites</button>
             <p>Relase Date: {this.state.movieData.release_date}</p>
             <p>Revenue: ${this.state.movieData.revenue}</p>
@@ -344,7 +369,7 @@ MovieView = () =>{
 
         </div>
         </div>
-        <div className="rightSide">
+        <div className="item-movie-right">
             <h1>Cast and Crew</h1>
             <button onClick={() =>this.switchView()}>Switch Cast or Crew</button>
             {this.castOrCrew()}
@@ -362,7 +387,7 @@ CastView = () =>{
     
     return(
         <div>
-            <div className="leftSide">
+            <div className="item-leftSide">
                 <h1>{this.state.castMember.name}</h1>
                 <img src={"http://image.tmdb.org/t/p/w185" + this.state.castMember.profile_path} alt={this.state.castMember.name} />
                 <button onClick={() => this.closeCast()}>Close Cast View</button>
@@ -373,7 +398,7 @@ CastView = () =>{
                 <p>Place of Birth: {this.state.castMember.place_of_birth}</p>
 
             </div>
-            <div className="rightSide">
+            <div className="item-rightSide">
                 <h1>Cast and Crew</h1>
                 <button onClick={() =>this.switchView()}>Switch Cast or Crew</button>
                 {this.castOrCrew()}
@@ -411,14 +436,18 @@ class SingleMovie extends React.Component {
                     <img src={"http://image.tmdb.org/t/p/w92" + this.props.movie.poster} alt={this.props.movie.title} />
                 </td>
                 <td>
-                    <p id="title">{this.props.movie.title}</p>
+                    <p id="title" onClick={()=>this.props.movieView(this.props.movie)}>{this.props.movie.title}</p>
                 </td>
                 <td>
                     {this.props.movie.release_date.substring(0, 4)}
                 </td>
                 <td>
-                    <div className="rightSide">
+                    
                         {this.props.movie.ratings.average}
+                        
+                </td>
+                <td>
+                <div className="rightSide">
                         <button onClick={() => this.props.addFav(this.props.movie)} type="submit" >
                             <i className="fas fa-heart"></i></button>
                         <button onClick={()=>this.props.movieView(this.props.movie)}>View</button>

@@ -25,7 +25,7 @@ class Home extends React.Component {
                     <h1>Movie Browser</h1>
 
                     <form>
-                    <label for="title">Title</label>
+                    <label htmlFor="title">Title</label>
                      <input type="text" onChange={this.handleChange} defaultValue="" id="movTitle" name="title"/>
                     </form>
                    
