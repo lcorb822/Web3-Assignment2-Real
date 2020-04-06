@@ -2,10 +2,16 @@ import React from 'react';
 import './default.css';
 import 'typeface-roboto';
 import Header from './header'
+import { Button, Container, Row, Col } from 'react-bootstrap';
+import _ from 'lodash';
 class DefaultView extends React.Component {
     constructor(props) {
         super(props);
         const { on: onV, title: titleVar } = this.props.location.state.filters;
+        let setType = ""
+        if (onV){
+            setType = "title"
+        }
         this.state = {
             movieList: [],
             favorites: [],
@@ -15,7 +21,8 @@ class DefaultView extends React.Component {
                 before: 3000,
                 after: 0,
                 below: 10,
-                above: 0
+                above: 0,
+                type: setType
             },
             viewMode: "loading",
             selectedMovie : {}
@@ -25,7 +32,7 @@ class DefaultView extends React.Component {
 
     async componentDidMount() {
         try {
-            const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?id=ALL";
+            const url = "https://web3assignment2.herokuapp.com/api/movies";
             const response = await fetch(url);
             const jsonData = await response.json();
             jsonData.sort((a, b) => a.title.localeCompare(b.title));
@@ -37,8 +44,8 @@ class DefaultView extends React.Component {
     }
 
     handleFilterChange = filterObj => {
-
-        const updateFilter = this.state.filters;
+        const updateFilter = JSON.parse(JSON.stringify(this.state.filters))
+        //const updateFilter = this.state.filters;
         for (let name in filterObj) {
             updateFilter[name] = filterObj[name];
         }
@@ -79,11 +86,16 @@ class DefaultView extends React.Component {
         </div>)
     }
     MovieDetails = () => {
-        return (<div className="container">
-            <Header />
+        return (
+        
+        <div className="container">
+            
+            <Header /> 
             <FavoritesList favoritesList={this.state.favorites} movieView={this.movieView} removeFav={this.removeFavorite}/>
             <LargeMovie movie={this.state.selectedMovie} addFav={this.addToFavorites} returnView={this.defaultView} />
+            
         </div>
+        
 
         )
     }
@@ -109,14 +121,34 @@ class MovieFilter extends React.Component {
             before: 3000,
             after: 0,
             below: 10,
-            above: 0
+            above: 0,
+            type: ""
         }
     }
 
     handleChange = event => {
+        let newType = ""
+        switch(event.target.name) {
+            case "title":
+                newType = "title";
+              break;
+            case "before":
+                newType = "year";
+              break;
+            case "after":
+                newType = "year";
+            break;
+            case "above":
+                newType = "rating";
+              break;
+            case "below":
+                newType = "rating"
+              break
+          }
         this.setState({
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value, type: newType
         })
+
     }
     submitChange = () => {
         const filterObj = this.state;
@@ -130,9 +162,10 @@ class MovieFilter extends React.Component {
             after: 0,
             below: 10,
             above: 0,
-            on: false
+            on: false,
+            type: ""
         };
-        this.setState({ title: filterObj.title, before: filterObj.before, after: filterObj.after, below: filterObj.below, above: filterObj.above, on: filterObj.on });
+        this.setState({ title: filterObj.title, before: filterObj.before, after: filterObj.after, below: filterObj.below, above: filterObj.above, on: filterObj.on, type:filterObj.type });
         this.props.returnFilter(filterObj);
     }
     render() {
@@ -144,25 +177,19 @@ class MovieFilter extends React.Component {
                     <input type="text" onChange={this.handleChange} defaultValue={this.state.title} name="title" /> <br />
 
                     <label id="titleHeader" htmlFor="year">Year</label> <br />
-                    <input type="radio" id="before" name="year" value="before" />
-                    <label htmlFor="male">Before</label> <input type="number" onChange={this.handleChange} name="before" /><br />
-                    <input type="radio" id="after" name="year" value="after" />
-                    <label htmlFor="female">After</label> <input type="number" onChange={this.handleChange} name="after" /><br />
-                    <input type="radio" id="between" name="year" value="between" />
-                    <label htmlFor="other">Between</label> <input type="number" onChange={this.handleChange} name="after" />
+                   
+                     
+                    <label htmlFor="other">Between</label> <br /> <input type="number" onChange={this.handleChange} name="after" /> 
                     <input type="number" onChange={this.handleChange} name="before" /> <br />
                     <label id="titleHeader" htmlFor="rating">Rating</label> <br />
-                    <label htmlFor="rating">Below:(0-10)</label>
-                    <input type="number" onChange={this.handleChange} name="below" /> <br />
-                    <label htmlFor="rating">Above:(0-10)</label>
-                    <input type="number" onChange={this.handleChange} name="above" /><br />
-                    <label htmlFor="rating">Between:(0-10)</label>
+        
+                    <label htmlFor="rating">Between:(0-10)</label> <br />
                     <input type="number" onChange={this.handleChange} name="above" />
                     <input type="number" onChange={this.handleChange} name="below" /> <br />
 
                 </form>
-                <button onClick={this.submitChange}>Filter</button>
-                <button onClick={this.clearHandler}>Clear</button>
+                <Button variant="outline-dark" onClick={this.submitChange}>Filter</Button>
+                <Button variant="outline-dark"  onClick={this.clearHandler}>Clear</Button>
 
             </div>
         )
@@ -173,19 +200,111 @@ class MovieFilter extends React.Component {
 class MoviesList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { currentFilter: this.props.filter };
+        this.state = {
+                        filterList : [], filter: {}
+        };
+    }
+    async componentDidMount() {
+        if( this.props.filter.on) {
+            if (this.props.filter.type == "title"){
+                try {
+                    const url = "https://web3assignment2.herokuapp.com/api/find/title/"+this.props.filter.title;
+                    const response = await fetch(url);
+                    const jsonData = await response.json();
+                    jsonData.sort((a, b) => a.title.localeCompare(b.title));
+                   
+                    const newObj = JSON.parse(JSON.stringify(this.props.filter));
+                    this.setState({filterList: jsonData, filter: newObj});
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            
+            if (this.props.filter.type == "year"){
+                try {
+                    const url = `https://web3assignment2.herokuapp.com/api/find/year/${this.props.movieList.filter.after}/${this.props.movieList.filter.before}`;
+                    const response = await fetch(url);
+                    const jsonData = await response.json();
+                    jsonData.sort((a, b) => a.title.localeCompare(b.title));
+                    this.setState({filterList: jsonData});
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }   
+            
+            if (this.props.filter.type == "rating"){
+                try {
+                    const url = `https://web3assignment2.herokuapp.com/api/rating/${this.props.filter.above}/${this.props.movieList.filter.below}`;
+                    const response = await fetch(url);
+                    const jsonData = await response.json();
+                    jsonData.sort((a, b) => a.title.localeCompare(b.title));
+                    this.setState({filterList: jsonData});
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            }
+    
+        else{
+            this.setState({filterList: this.props.movieList});
+        }
+    
+     }
+
+    async componentDidUpdate(prevProps,prevState) {
+        if(!_.isEqual(prevProps.filter,this.props.filter)){
+        if( this.props.filter.on) {
+            if (this.props.filter.type == "title"){
+                try {
+                    const url = "https://web3assignment2.herokuapp.com/api/find/title/"+this.props.filter.title;
+                    const response = await fetch(url);
+                    const jsonData = await response.json();
+                    jsonData.sort((a, b) => a.title.localeCompare(b.title));
+                    this.setState({filterList: jsonData});
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            
+            if (this.props.filter.type == "year"){
+                try {
+                    const url = `https://web3assignment2.herokuapp.com/api/find/year/${this.props.filter.after}/${this.props.filter.before}`;
+                    const response = await fetch(url);
+                    const jsonData = await response.json();
+                    jsonData.sort((a, b) => a.title.localeCompare(b.title));
+                    this.setState({filterList: jsonData});
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }   
+            
+            if (this.props.filter.type == "rating"){
+                try {
+                    const url = `https://web3assignment2.herokuapp.com/api/find/rating/${this.props.filter.above}/${this.props.filter.below}`;
+                    const response = await fetch(url);
+                    const jsonData = await response.json();
+                    jsonData.sort((a, b) => a.title.localeCompare(b.title));
+                    this.setState({filterList: jsonData});
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            }
+    
+        else{
+            this.setState({filterList: this.props.movieList});
+        }
+    }
     }
 
-    filterList = () => {
-        const newList = this.props.movieList.filter(movie => {
-            return (movie.title.includes(this.props.filter.title) &&
-                movie.release_date.substring(0, 4) > this.props.filter.after &&
-                movie.release_date.substring(0, 4) < this.props.filter.before &&
-                movie.ratings.average > this.props.filter.above &&
-                movie.ratings.average < this.props.filter.below)
-
-        })
-        return newList
+     filterList = () => { 
+         return this.state.filterList;
     }
 
 
@@ -195,13 +314,16 @@ class MoviesList extends React.Component {
             <div className="item-list">
                 <h1>Movie List</h1>
                 <table className="movieTable">
-                    <tbody>
+                   <thead>
                         <tr>
                             <th></th>
                             <th>Title</th>
                             <th>Year</th>
                             <th>Rating</th>
+                            <th></th>
                         </tr>
+                        </thead>
+                        <tbody>
                         {this.filterList().map((movie, index) => {
                             return <SingleMovie movie={movie} key={movie.id} addFav={this.props.addFav} movieView={this.props.movieView} />
                         })}
@@ -223,7 +345,7 @@ class FavoritesList extends React.Component {
     Favorite = (props) => {
         return (
             <div className="favPoster">
-                <button className="removeButton" onClick={()=>props.remFav(props.movie)}><i className="fa fa-window-close" ></i></button>
+                <Button variant="danger" className="removeButton" onClick={()=>props.remFav(props.movie)}><i className="fa fa-window-close" ></i></Button>
             <img  onClick={()=>this.props.movieView(props.movie)} src={"http://image.tmdb.org/t/p/w92" + props.movie.poster} alt={props.movie.title} />
             </div>
         )
@@ -246,11 +368,14 @@ class LargeMovie extends React.Component {
     }
 
     async componentDidMount() {
+       
         try {
-            const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies.php?id=" + this.props.movie.id;
+            const url = "https://web3assignment2.herokuapp.com/api/movies/" + this.props.movie.id;
+          
+            
             const response = await fetch(url);
             const jsonData = await response.json();
-            this.setState({ movieData: jsonData, viewMode:"movie" });
+            this.setState({ movieData: jsonData[0], viewMode:"movie" });
         }
         catch (error) {
             console.error(error);
@@ -260,11 +385,10 @@ class LargeMovie extends React.Component {
     async componentDidUpdate(prevProps) {
         if(this.props.movie.id !== prevProps.movie.id){
         try {
-            const url = "http://www.randyconnolly.com/funwebdev/3rd/api/movie/movies.php?id=" + this.props.movie.id;
+            const url = "https://web3assignment2.herokuapp.com/api/movies/" + this.props.movie.id;
             const response = await fetch(url);
             const jsonData = await response.json();
-            console.dir(jsonData);
-            this.setState({ movieData: jsonData, viewMode:"movie" });
+            this.setState({ movieData: jsonData[0], viewMode:"movie" });
         }
         catch (error) {
             console.error(error);
@@ -353,6 +477,7 @@ castOrCrew = () =>{
 }
 MovieView = () =>{
     return(<div>
+        
         <div className="item-movie-left">
             <div>
             <h1>{this.state.movieData.title}</h1> <button onClick={() => this.props.returnView()}><i className="fa fa-window-close" ></i></button>                    
@@ -366,9 +491,11 @@ MovieView = () =>{
             <a href={"https://www.imdb.com/title/" + this.state.movieData.imdb_id}> <p>IMDB Link  </p></a>
             <a href={"https://www.themoviedb.org/movie/" + this.state.movieData.tmdb_id}> <p>TMDB Link</p> </a>
             <p>Rating: {this.state.movieData.ratings.average}</p>
-
+            
         </div>
+        
         </div>
+        
         <div className="item-movie-right">
             <h1>Cast and Crew</h1>
             <button onClick={() =>this.switchView()}>Switch Cast or Crew</button>
@@ -376,6 +503,7 @@ MovieView = () =>{
 
 
         </div>
+        
     </div>
 
     )
@@ -448,9 +576,9 @@ class SingleMovie extends React.Component {
                 </td>
                 <td>
                 <div className="rightSide">
-                        <button onClick={() => this.props.addFav(this.props.movie)} type="submit" >
-                            <i className="fas fa-heart"></i></button>
-                        <button onClick={()=>this.props.movieView(this.props.movie)}>View</button>
+                        <Button variant="outline-success" onClick={() => this.props.addFav(this.props.movie)} type="submit" >
+                            <i className="fas fa-heart"></i></Button>
+                        <Button variant="outline-dark" onClick={()=>this.props.movieView(this.props.movie)}>View</Button>
                     </div>
                 </td>
             </tr>

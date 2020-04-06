@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 class Header extends React.Component {
    
@@ -9,7 +10,7 @@ class Header extends React.Component {
             <div className="item-header">
         
         <Link to='/home'> <i  className="fas fa-theater-masks" id="homeButton"></i> </Link>
-            <Link to='/about'><button className="aboutButton">About</button> </Link>
+            <Link to='/about'><Button variant="info" className="aboutButton">About</Button> </Link>
             </div>
         )
     }

@@ -5,7 +5,7 @@
 
 .mainContainer {
     display: grid ;
-    grid-template-columns: 23% 25% 25% 23%;
+    grid-template-columns: 20% 25% 25% 23%;
     grid-template-rows: 100px 150px 400px 100px;
     gap: 5px;
     font-family: Arial, Helvetica, sans-serif;
@@ -24,14 +24,33 @@
   }
   .item-filter {
     grid-column: 1/2;
-    grid-row: 3/4;
+    grid-row: 3/5;
+    background-color: whitesmoke ;
   }
   .item-list {
     grid-column: 2/5;
     grid-row: 3/5;
-    overflow: scroll;
+    
   }
-  
+  .movieTable th, .movieTable td {
+    padding: 5px;
+    text-align: left;
+    width: 200px;
+  }
+  .movieTable{
+    
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+  .movieTable tbody{
+    display:block;
+    overflow:auto;
+    height:450px;
+    width:100%;
+  }
+  .movieTable thead{
+    display:block;
+  }
  
   /*
   .leftSide {

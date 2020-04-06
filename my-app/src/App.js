@@ -4,6 +4,7 @@ import Home from './home/Home';
 import About from './about/about'
 import DefaultView from './defaultView/default'
 import {Route} from 'react-router-dom';
+
 function App() {
   return (
  <main>

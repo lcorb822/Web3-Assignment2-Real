@@ -1,6 +1,7 @@
 import React from "react";
 import "./home.css";
 import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 class Home extends React.Component {
     constructor(props){
         super(props);
@@ -34,12 +35,12 @@ class Home extends React.Component {
                                  filters: {on:true,
                                           title:this.state.inputValue}
                                      }
-                                }}><button>Show Matching Movies</button> </Link><Link to={{ pathname: '/defaultView',
+                                }}><Button variant="primary">Show Matching Movies</Button> </Link><Link to={{ pathname: '/defaultView',
                                 state: {
                                 filters: {on:false,
                                          title:""}
                                     }
-                               }}> <button>Show All Movies</button> </Link>
+                               }}> <Button variant="secondary">Show All Movies</Button> </Link>
                 </div>
                 <p> Credit for photo https://unsplash.com/photos/evlkOfkQ5rE</p>
             </div>
