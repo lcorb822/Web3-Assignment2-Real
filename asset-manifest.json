@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/Web3-Assignment2-Real/static/css/main.330afbb0.chunk.css",
+    "main.js": "/Web3-Assignment2-Real/static/js/main.9ad21add.chunk.js",
+    "main.js.map": "/Web3-Assignment2-Real/static/js/main.9ad21add.chunk.js.map",
+    "runtime-main.js": "/Web3-Assignment2-Real/static/js/runtime-main.b8d8111d.js",
+    "runtime-main.js.map": "/Web3-Assignment2-Real/static/js/runtime-main.b8d8111d.js.map",
+    "static/css/2.5375aa1b.chunk.css": "/Web3-Assignment2-Real/static/css/2.5375aa1b.chunk.css",
+    "static/js/2.a529ef89.chunk.js": "/Web3-Assignment2-Real/static/js/2.a529ef89.chunk.js",
+    "static/js/2.a529ef89.chunk.js.map": "/Web3-Assignment2-Real/static/js/2.a529ef89.chunk.js.map",
+    "index.html": "/Web3-Assignment2-Real/index.html",
+    "precache-manifest.c131b17af42e62577a946e68e9784c30.js": "/Web3-Assignment2-Real/precache-manifest.c131b17af42e62577a946e68e9784c30.js",
+    "service-worker.js": "/Web3-Assignment2-Real/service-worker.js",
+    "static/css/2.5375aa1b.chunk.css.map": "/Web3-Assignment2-Real/static/css/2.5375aa1b.chunk.css.map",
+    "static/css/main.330afbb0.chunk.css.map": "/Web3-Assignment2-Real/static/css/main.330afbb0.chunk.css.map",
+    "static/js/2.a529ef89.chunk.js.LICENSE.txt": "/Web3-Assignment2-Real/static/js/2.a529ef89.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/Web3-Assignment2-Real/static/media/roboto-latin-900italic.ebf6d164.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b8d8111d.js",
+    "static/css/2.5375aa1b.chunk.css",
+    "static/js/2.a529ef89.chunk.js",
+    "static/css/main.330afbb0.chunk.css",
+    "static/js/main.9ad21add.chunk.js"
+  ]
+}
