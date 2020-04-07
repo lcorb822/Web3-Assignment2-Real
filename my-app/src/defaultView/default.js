@@ -2,7 +2,7 @@ import React from 'react';
 import './default.css';
 import 'typeface-roboto';
 import Header from './header'
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col, Image } from 'react-bootstrap';
 import _ from 'lodash';
 import axios from 'axios';
 class DefaultView extends React.Component {
@@ -29,8 +29,6 @@ class DefaultView extends React.Component {
             selectedMovie : {}
         };
     }
-
-
     async componentDidMount() {
         try {
             const url = "https://web3assignment2.herokuapp.com/api/movies";
@@ -70,20 +68,6 @@ class DefaultView extends React.Component {
         }
     }
 
-    // addToFavorites = async (movie) => {
-    //     const tempFavList = this.state.favorites;
-    //     tempFavList.push(movie);
-    //     const response = await axios.post(
-    //         'https://web3assignment2.herokuapp.com/api/favorites',
-    //         movie,
-    //         { headers: { 'Content-Type': 'application/json' } }
-    //       )
-          
-    //       console.log(response.data);
-    //     let set = new Set(tempFavList);
-    //     let noDuplicates = Array.from(set)
-    //     this.setState({ favorites: noDuplicates });
-    // }
     removeFavorite = async(movie) =>{
         const url = 'https://web3assignment2.herokuapp.com/api/favorites'
         const sResponse = await  axios.delete(url, {data: movie });
@@ -98,13 +82,7 @@ class DefaultView extends React.Component {
             console.error(error);
         }
     }
-    // removeFavorite = movie =>{
-    //     let favs = this.state.favorites;
-    //     const url = 'https://web3assignment2.herokuapp.com/api/favorites'
-    //     axios.delete(url, { data: movie });
-    //     favs = favs.filter(item => item.id !== movie.id);
-    //     this.setState({favorites:favs});
-    // }
+  
     movieView = movie => {
         this.setState({selectedMovie:movie});
         this.setState({viewMode:"movieDetails"});
@@ -127,14 +105,10 @@ class DefaultView extends React.Component {
         </div>)
     }
     MovieDetails = () => {
-        return (
-        
-        <div className="container">
-            
+        return (<div className="container">
             <Header /> 
             <FavoritesList favoritesList={this.state.favorites} movieView={this.movieView} removeFav={this.removeFavorite}/>
-            <LargeMovie movie={this.state.selectedMovie} addFav={this.addToFavorites} returnView={this.defaultView} />
-            
+            <LargeMovie movie={this.state.selectedMovie} addFav={this.addToFavorites} returnView={this.defaultView} />           
         </div>
         
 
@@ -440,7 +414,7 @@ class LargeMovie extends React.Component {
 
     Cast = (castObj) =>{
         return(
-            <table>
+            <table className="castTable">
                  <tbody>
                         <tr>
                             <th>Character</th>
@@ -452,7 +426,7 @@ class LargeMovie extends React.Component {
                             <tr key={cast.id}>
                                 <td>{cast.character}</td>
                                 <td>{cast.name} </td>
-                                <td><button onClick={() => this.fetchCastInfo(cast)}>View</button></td>
+                                <td><Button variant="outline-info" onClick={() => this.fetchCastInfo(cast)}>View</Button></td>
                             </tr>)
                     })}
  
@@ -474,7 +448,7 @@ class LargeMovie extends React.Component {
 
     Crew = (crewObj) =>{
         return(
-            <table>
+            <table className="crewTable">
                  <tbody>
                         <tr>
                             <th>Department</th>
@@ -517,35 +491,32 @@ castOrCrew = () =>{
     }
 }
 MovieView = () =>{
-    return(<div>
+    return(<>
         
         <div className="item-movie-left">
-            <div>
-            <h1>{this.state.movieData.title}</h1> <button onClick={() => this.props.returnView()}><i className="fa fa-window-close" ></i></button>                    
-            <img src={"http://image.tmdb.org/t/p/w185" + this.state.movieData.poster} alt={this.state.movieData.tagline} />
+            
+            <h1>{this.state.movieData.title}</h1> <Button variant="outline-danger" onClick={() => this.props.returnView()}><i className="fa fa-window-close" ></i></Button>                    
+          <div>  <Image className="p-3" src={"http://image.tmdb.org/t/p/w185" + this.state.movieData.poster} alt={this.state.movieData.tagline} rounded /></div>
         
-            <button onClick={() => this.props.addFav(this.props.movie)}>Add To Favorites</button>
-            <p>Relase Date: {this.state.movieData.release_date}</p>
-            <p>Revenue: ${this.state.movieData.revenue}</p>
-            <p>Runtime: {this.state.movieData.runtime} minutes</p>
-            <p>Tagline: {this.state.movieData.tagline}</p>
+            <div><Button variant="outline-success" onClick={() => this.props.addFav(this.props.movie)}>Add To Favorites</Button> </div>
+            <p><strong>Relase Date:</strong> {this.state.movieData.release_date}</p>
+            <p><strong>Revenue:</strong> ${this.state.movieData.revenue}</p>
+            <p><strong>Runtime:</strong> {this.state.movieData.runtime} minutes</p>
+            <p><strong>Tagline:</strong> {this.state.movieData.tagline}</p>
             <a href={"https://www.imdb.com/title/" + this.state.movieData.imdb_id}> <p>IMDB Link  </p></a>
             <a href={"https://www.themoviedb.org/movie/" + this.state.movieData.tmdb_id}> <p>TMDB Link</p> </a>
-            <p>Rating: {this.state.movieData.ratings.average}</p>
-            
-        </div>
-        
+            <p><strong>Rating:</strong> {this.state.movieData.ratings.average}</p> 
         </div>
         
         <div className="item-movie-right">
             <h1>Cast and Crew</h1>
-            <button onClick={() =>this.switchView()}>Switch Cast or Crew</button>
+            <Button variant="info" onClick={() =>this.switchView()}>Switch Cast or Crew</Button>
             {this.castOrCrew()}
 
 
         </div>
         
-    </div>
+    </>
 
     )
 }
@@ -555,25 +526,23 @@ closeCast = () =>{
 CastView = () =>{
     
     return(
-        <div>
+        <>
             <div className="item-leftSide">
                 <h1>{this.state.castMember.name}</h1>
-                <img src={"http://image.tmdb.org/t/p/w185" + this.state.castMember.profile_path} alt={this.state.castMember.name} />
+               <div> <img className="p-1" src={"http://image.tmdb.org/t/p/w185" + this.state.castMember.profile_path} alt={this.state.castMember.name} /></div>
                 <button onClick={() => this.closeCast()}>Close Cast View</button>
-            </div>
-            <div>
-                <p>Birthday: {this.state.castMember.birthday}</p>
-                <p>Biography: {this.state.castMember.biography}</p>
-                <p>Place of Birth: {this.state.castMember.place_of_birth}</p>
+                <p><strong>Birthday:</strong> {this.state.castMember.birthday}</p>
+                <p><strong>Biography:</strong> {this.state.castMember.biography}</p>
+                <p><strong>Place of Birth:</strong> {this.state.castMember.place_of_birth}</p>
 
             </div>
             <div className="item-rightSide">
                 <h1>Cast and Crew</h1>
-                <button onClick={() =>this.switchView()}>Switch Cast or Crew</button>
+                <Button variant="info" onClick={() =>this.switchView()}>Switch Cast or Crew</Button>
                 {this.castOrCrew()}
             </div>
 
-        </div>
+        </>
     )
 
 }

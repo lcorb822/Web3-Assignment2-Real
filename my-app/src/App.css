@@ -1,14 +1,10 @@
-
-.movieTable {
-  overflow: scroll;
+.aboutPage {
+  margin: 2em;
+  text-align: center;
+  background-color: cornsilk;
+  
 }
-.favorites {
-  display:  inline;
-  padding: 10px;
-}
-.test {
-  background-color: aqua;
-}
-.favPoster{
-  padding: 5px;
+.aboutPage ul{
+  padding-left: 0;
+  list-style-position: inside;
 }

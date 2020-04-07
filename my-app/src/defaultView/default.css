@@ -4,7 +4,7 @@
 }
 
 .mainContainer {
-    display: grid ;
+    display: grid;
     grid-template-columns: 20% 25% 25% 23%;
     grid-template-rows: 100px 150px 400px 100px;
     gap: 5px;
@@ -30,17 +30,24 @@
   .item-list {
     grid-column: 2/5;
     grid-row: 3/5;
+    background-color: rgb(249, 252, 255);
     
   }
   .movieTable th, .movieTable td {
     padding: 5px;
     text-align: left;
     width: 200px;
+    
+  }
+  .movieTable tr {
+    border-bottom: 1pt solid black;
   }
   .movieTable{
-    
+    overflow: scroll;
+    border-collapse: collapse;
     table-layout: fixed;
     border-collapse: collapse;
+    background-color:  rgb(255, 251, 245);  
 }
   .movieTable tbody{
     display:block;
@@ -52,18 +59,34 @@
     display:block;
   }
  
-  /*
-  .leftSide {
-    grid-column: 1/2;
-    grid-row: 3/4;
-  }*/
-  /*
-  .singleRow .rightSide {
+.item-movie-right .castTable,.item-movie-right .crewTable , .item-rightSide .crewTable,.item-rightSide .castTable {
   
-    float: right;
-    
-  }
-  */
+  display:block;
+  overflow:auto;
+  width:100%;
+  height:500px;
+  padding: 5px;
+ 
+}
+.item-movie-right .crewTable th, .item-movie-right .crewTable td {
+  padding: 5px;
+  text-align: left;
+  width:200px;
+  border: 1px solid black;
+  
+}
+.item-movie-right .castTable th, .item-movie-right .castTable td {
+  padding: 5px;
+  text-align: left;
+  width:200px;
+  border: 1px solid black;
+  
+  
+}
+
+.container .item-movie-left Image{
+  padding: 5px;
+}
   .favPoster{
       float: left;
   }
@@ -87,18 +110,38 @@
  }
  .container {
     display:grid;
-    grid-template-columns: 23% 25% 25% 23%;
+    grid-template-columns: 23% 25% 25% 55%;
     grid-template-rows: 100px 150px 400px 400px;
     gap: 5px;
     font-family: Arial, Helvetica, sans-serif;
     margin: 1em;
  }
- .container div .item-movie-left {
-    grid-column: 1/2;
-    grid-row: 3/4;
+ .container .item-movie-left, .container .item-leftSide {
+    grid-column: 1/3;
+    grid-row: 3/5;
   }
-
-  .container div .item-movie-right {
+  .container .item-movie-left Button{
+    text-align:center;
+  }
+.container .item-header{
+  grid-column: 1/5;
+    grid-row: 1;
+    background-color: ghostwhite;
+}
+  .container .item-movie-right, .container .item-rightSide  {
     grid-column: 3/5;
-    grid-row: 3/4;
+    grid-row: 3/5;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Corben', Georgia, Times, serif;
+}
+h1 {
+  text-align : center;
+}
+p {
+  font-family: Arial, Times, serif;
+}
+
+.favPoster{
+  padding: 5px;
+}
