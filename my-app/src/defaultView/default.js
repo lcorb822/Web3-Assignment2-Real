@@ -4,6 +4,7 @@ import 'typeface-roboto';
 import Header from './header'
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
+import axios from 'axios';
 class DefaultView extends React.Component {
     constructor(props) {
         super(props);
@@ -51,19 +52,59 @@ class DefaultView extends React.Component {
         }
         this.setState({ filters: updateFilter })
     }
+    addToFavorites = async (movie) => {
+        
+        const response = await axios.post(
+            'https://web3assignment2.herokuapp.com/api/favorites',
+            movie,
+            { headers: { 'Content-Type': 'application/json' } })         
+          console.log(response.data);
+          try {
+            const url = "https://web3assignment2.herokuapp.com/api/favorites";
+            const response = await fetch(url);
+            const jsonData = await response.json();
+            this.setState({ favorites: jsonData });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
-    addToFavorites = movie => {
-        const tempFavList = this.state.favorites;
-        tempFavList.push(movie);
-        let set = new Set(tempFavList);
-        let noDuplicates = Array.from(set)
-        this.setState({ favorites: noDuplicates });
+    // addToFavorites = async (movie) => {
+    //     const tempFavList = this.state.favorites;
+    //     tempFavList.push(movie);
+    //     const response = await axios.post(
+    //         'https://web3assignment2.herokuapp.com/api/favorites',
+    //         movie,
+    //         { headers: { 'Content-Type': 'application/json' } }
+    //       )
+          
+    //       console.log(response.data);
+    //     let set = new Set(tempFavList);
+    //     let noDuplicates = Array.from(set)
+    //     this.setState({ favorites: noDuplicates });
+    // }
+    removeFavorite = async(movie) =>{
+        const url = 'https://web3assignment2.herokuapp.com/api/favorites'
+        const sResponse = await  axios.delete(url, {data: movie });
+        console.log(sResponse);
+        try {
+            const url = "https://web3assignment2.herokuapp.com/api/favorites";
+            const response = await fetch(url);
+            const jsonData = await response.json();
+            this.setState({ favorites: jsonData });
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
-    removeFavorite = movie =>{
-        let favs = this.state.favorites;
-        favs = favs.filter(item => item.id !== movie.id);
-        this.setState({favorites:favs});
-    }
+    // removeFavorite = movie =>{
+    //     let favs = this.state.favorites;
+    //     const url = 'https://web3assignment2.herokuapp.com/api/favorites'
+    //     axios.delete(url, { data: movie });
+    //     favs = favs.filter(item => item.id !== movie.id);
+    //     this.setState({favorites:favs});
+    // }
     movieView = movie => {
         this.setState({selectedMovie:movie});
         this.setState({viewMode:"movieDetails"});
