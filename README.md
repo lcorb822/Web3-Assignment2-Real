@@ -1,2 +1,2 @@
-# Web3-Assignment-1
-This repo contains all of the files for the React Assignment 1
+# Web3-Assignment-2
+This repo contains all of the files for the React portion of assignment 2
