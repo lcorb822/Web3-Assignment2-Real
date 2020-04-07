@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "15f9016148521b8f2c3f33fa672778b5",
+    "revision": "8aed5b9683f720e99307c9b4581646b2",
     "url": "/Web3-Assignment2-Real/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Web3-Assignment2-Real/static/css/2.5375aa1b.chunk.css"
   },
   {
-    "revision": "e7fe22101f34353d9d87",
+    "revision": "9cf71df7c6dee3c5fa9c",
     "url": "/Web3-Assignment2-Real/static/css/main.330afbb0.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Web3-Assignment2-Real/static/js/2.a529ef89.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "e7fe22101f34353d9d87",
-    "url": "/Web3-Assignment2-Real/static/js/main.9ad21add.chunk.js"
+    "revision": "9cf71df7c6dee3c5fa9c",
+    "url": "/Web3-Assignment2-Real/static/js/main.f0950c5b.chunk.js"
   },
   {
     "revision": "d1d67d7cbeb785991bb4",
